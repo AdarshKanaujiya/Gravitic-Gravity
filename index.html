@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System Viewer</title>
+
+    <script type="module" src="https://threejs.org/build/three.module.js"></script>
+    <script type="module" src="https://threejs.org/examples/jsm/controls/OrbitControls.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+
+        #navbar {
+            background-color: #333;
+            overflow: hidden;
+            position: relative;
+            z-index: 3;
+            /* Make sure the navbar is above the solar system */
+        }
+
+        #open-btn {
+            font-size: 20px;
+            cursor: pointer;
+            color: white;
+            padding: 14px 16px;
+            text-decoration: none;
+            display: block;
+            z-index: 4;
+            /* Make sure the button is above the solar system */
+        }
+
+        #sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 2;
+            left: 0;
+            background-color: rgba(51, 51, 51, 0.2);
+            /* More transparent dark background */
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            color: white;
+        }
+
+        #sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+            transition: 0.3s;
+        }
+
+        #sidebar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        #main {
+            position: relative;
+            z-index: 1;
+            transition: margin-left 0.5s;
+            padding: 16px;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        .heading{
+            /* background-color: white; */
+            text-align: center;
+            color: white;
+            font-size: 3rem;
+        }
+
+        #solar-system-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            /* Allow interaction with elements behind the solar system */
+            z-index: 0;
+            /* Send the solar system to the back */
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="navbar">
+        <a id="open-btn" href="#" onclick="toggleNav()">☰ Menu</a>
+
+        
+    </div>
+
+    <div id="sidebar">
+        <a href="finalabd.html" onclick="toggleNav()">About</a>
+        <a href="finme.html" onclick="toggleNav()">Simulation</a>
+        <a href="finalza.html" onclick="toggleNav()">Contacts</a>
+    </div>
+
+    <div id="main">
+        <h1 class="heading">Gravitic Gravity</h1>
+        <!-- Your page content goes here -->
+    </div>
+
+    <div id="solar-system-container"></div>
+
+    <script type="module">
+        import * as THREE from 'https://threejs.org/build/three.module.js';
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        const solarSystemContainer = document.getElementById('solar-system-container');
+        solarSystemContainer.appendChild(renderer.domElement);
+
+        // Add stars to the background
+        const starsGeometry = new THREE.BufferGeometry();
+        const starsMaterial = new THREE.PointsMaterial({ color: 0xFFFFFF, size: 0.1 });
+
+        const starsVertices = [];
+        for (let i = 0; i < 1000; i++) {
+            const x = (Math.random() - 0.5) * 2000;
+            const y = (Math.random() - 0.5) * 2000;
+            const z = (Math.random() - 0.5) * 2000;
+            starsVertices.push(x, y, z);
+        }
+
+        starsGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starsVertices, 3));
+        const stars = new THREE.Points(starsGeometry, starsMaterial);
+        scene.add(stars);
+
+        // Create sun
+        const sunGeometry = new THREE.SphereGeometry(16, 32, 32);
+        const sunMaterial = new THREE.MeshBasicMaterial({ color: 0xFFFF00 });
+        const sun = new THREE.Mesh(sunGeometry, sunMaterial);
+        scene.add(sun);
+
+        // Create planets
+        const mercury = createPlanet(2.8, 0x996633, 20);
+        const venus = createPlanet(4.5, 0xFFD700, 30);
+        const earth = createPlanet(5, 0x0000FF, 40);
+        const mars = createPlanet(4, 0xFF0000, 55);
+        const jupiter = createPlanet(10, 0xFFA500, 80);
+        const saturn = createPlanetWithRing(9, 0xFFD700, 100);
+        const uranus = createPlanetWithRing(7, 0x00FFFF, 120);
+        const neptune = createPlanet(6, 0x0000A0, 140);
+
+        function createPlanet(radius, color, distance) {
+            const geometry = new THREE.SphereGeometry(radius, 32, 32);
+            const material = new THREE.MeshPhongMaterial({ color });
+            const planet = new THREE.Mesh(geometry, material);
+            scene.add(planet);
+
+            planet.distance = distance;
+            planet.angle = Math.random() * Math.PI * 2;
+
+            return planet;
+        }
+
+        function createPlanetWithRing(radius, color, distance) {
+            const planet = createPlanet(radius, color, distance);
+
+            const ringGeometry = new THREE.RingGeometry(radius * 1.2, radius * 1.8, 32);
+            const ringMaterial = new THREE.MeshBasicMaterial({ color: 0xCCCCCC, side: THREE.DoubleSide });
+            const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+            ringMesh.rotation.x = Math.PI / 2;
+            planet.add(ringMesh);
+
+            return planet;
+        }
+
+        // Directional light to illuminate the planets
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(5, 3, 5).normalize();
+        scene.add(directionalLight);
+
+        camera.position.z = 200;
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            // Rotate and revolve the planets
+            mercury.angle += 0.015;
+            venus.angle += 0.01;
+            earth.angle += 0.008;
+            mars.angle += 0.006;
+            jupiter.angle += 0.002;
+            saturn.angle += 0.001;
+            uranus.angle += 0.0005;
+            neptune.angle += 0.0002;
+
+            mercury.position.x = Math.cos(mercury.angle) * mercury.distance;
+            mercury.position.z = Math.sin(mercury.angle) * mercury.distance;
+
+            venus.position.x = Math.cos(venus.angle) * venus.distance;
+            venus.position.z = Math.sin(venus.angle) * venus.distance;
+
+            earth.position.x = Math.cos(earth.angle) * earth.distance;
+            earth.position.z = Math.sin(earth.angle) * earth.distance;
+
+            mars.position.x = Math.cos(mars.angle) * mars.distance;
+            mars.position.z = Math.sin(mars.angle) * mars.distance;
+
+            jupiter.position.x = Math.cos(jupiter.angle) * jupiter.distance;
+            jupiter.position.z = Math.sin(jupiter.angle) * jupiter.distance;
+
+            saturn.position.x = Math.cos(saturn.angle) * saturn.distance;
+            saturn.position.z = Math.sin(saturn.angle) * saturn.distance;
+
+            uranus.position.x = Math.cos(uranus.angle) * uranus.distance;
+            uranus.position.z = Math.sin(uranus.angle) * uranus.distance;
+
+            neptune.position.x = Math.cos(neptune.angle) * neptune.distance;
+            neptune.position.z = Math.sin(neptune.angle) * neptune.distance;
+
+            camera.lookAt(scene.position);
+            renderer.render(scene, camera);
+        }
+
+        // window.addEventListener('resize', () => {
+        //     const newWidth = window.innerWidth;
+        //     const newHeight = window.innerHeight;
+
+        //     camera.aspect = newWidth / newHeight;
+        //     camera.updateProjectionMatrix();
+        //     renderer.setSize(newWidth, newHeight);
+        // });  This Function Must Run Automatically i.e. It Must Call Itself
+
+        // Resize function to handle window resizing
+        function resizeRenderer() {
+            const newWidth = window.innerWidth;
+            const newHeight = window.innerHeight;
+
+            camera.aspect = newWidth / newHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(newWidth, newHeight);
+        }
+
+        // Invoke the resize function initially
+        resizeRenderer();
+
+        // Add event listener to handle window resize
+        window.addEventListener('resize', resizeRenderer);
+
+
+        animate();
+    </script>
+
+    <script>
+        function toggleNav() {
+            var sidebar = document.getElementById("sidebar");
+            var main = document.getElementById("main");
+
+            if (sidebar.style.width === "250px") {
+                sidebar.style.width = "0";
+                main.style.marginLeft = "0";
+            } else {
+                sidebar.style.width = "250px";
+                main.style.marginLeft = "250px";
+            }
+        }
+    </script>
+</body>
+
+</html>

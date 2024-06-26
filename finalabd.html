@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravitic Gravity Simulation</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <!-- External CSS stylesheet for enhanced design -->
+<style>
+/* styles.css */
+
+/* Global styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    background-image: url(https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+}
+
+.container {
+    max-width: 800px;
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.content-box {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 100px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    overflow: hidden;
+}
+
+.box-header {
+    background-color: #007bff;
+    color: #fff;
+    padding: 20px;
+}
+
+.box-content {
+    padding: 20px;
+}
+
+/* Header styles */
+.title {
+    margin: 0;
+}
+
+/* Section styles */
+.section-title {
+    color: #f3f4f5;
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.section-text {
+    line-height: 1.6;
+}
+
+/* Steps list styles */
+.steps {
+    list-style-type: decimal;
+    padding-left: 20px;
+}
+
+.steps li {
+    margin-bottom: 10px;
+}
+
+
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="content-box">
+            <header class="box-header">
+                <h1 class="title">Gravitic Gravity Simulation</h1>
+            </header>
+            <section class="box-content">
+                <h2 class="section-title" style="color: #007bff;">Simulation Process and Calculation</h2>
+                <p class="section-text">The simulation utilizes Three.js library to create a 3D scene. A cube represents the falling object, while a ground plane provides a reference point. Gravitational constants for different planets are defined. Time, velocity, displacement, and acceleration of the falling object are calculated based on gravity and elapsed time. The simulation updates in real-time, adjusting the position of the falling object and displaying relevant information such as time, velocity, and gravity.</p>
+            </section>
+        </div>
+        <div class="content-box">
+            <header class="box-header">
+                <h2 class="section-title">Gravity Differences on Planets</h2>
+            </header>
+            <section class="box-content">
+                <p class="section-text">Gravity varies on different planets due to variations in mass and radius. On Earth, gravity is approximately 9.8 m/s^2, which means objects accelerate at 9.8 meters per second squared towards the Earth's center. On the Moon, gravity is much weaker, around 1.625 m/s^2. Mars has a gravity of about 3.72076 m/s^2, while Jupiter has a much stronger gravity of about 24.79 m/s^2. These differences in gravity affect how objects fall on each planet, with stronger gravity resulting in faster acceleration towards the surface.</p>
+            </section>
+        </div>
+        <div class="content-box">
+            <header class="box-header">
+                <h2 class="section-title">Steps on How to Use the Simulation</h2>
+            </header>
+            <section class="box-content">
+                <ol class="steps">
+                    <li><strong>Select the Planet:</strong> Choose a planet from the dropdown menu to simulate the falling object under different gravitational conditions.</li>
+                    <li><strong>Select the Chart:</strong> Choose a chart type from the dropdown menu to visualize the object's velocity, displacement, or acceleration over time.</li>
+                    <li><strong>Start the Simulation:</strong> Click the "Start" button to begin the simulation and observe the object's motion and corresponding data on the selected chart.</li>
+                </ol>
+            </section>
+        </div>
+
+        <a class="btn btn-outline-primary " href="finalme.html" role="button">Start Simulation</a>
+    </div>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+</html>

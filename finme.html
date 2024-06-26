@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GRAVITIC GRAVITY</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      simulation-container {
+        width: 900px;
+        height: 600px;
+        padding: 0;
+        margin: 0;
+      }
+
+      body {
+        font-size: 30px; /* Adjust the font size as needed */
+      }
+
+      header {
+        background-color: teal; /* Change header color to purple */
+        font-size: 50px; /* Increase font size for header */
+      }
+
+      #planet-dropdown {
+        background-color:lightgray;
+        font-size: 35 px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 100; /* Change the background color as desired */
+      }
+
+      #chart-dropdown {
+        background-color: lightgray;
+;
+        font-size: 35 px;
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 100; /* Change the background color as desired */
+      }
+      
+      /* Add background color to the start button */
+      #selected-planet-textbox
+      {
+        background-color:lightgray; /* Change the background color as desired */
+        color: black; /* Change text color to white for better contrast */
+        border: none; /* Remove border */
+        padding: 15px 5px; /* Add padding for better appearance */
+        font-size: 20px; /* Set font size */
+        cursor: pointer; /* Add cursor pointer */
+        border-radius: 15%;
+      }
+
+      /* Add background color to the start button */
+      #start-button,
+      #reset-button,
+      
+      #reset-button:hover {
+        background-color: teal; /* Change the background color as desired */
+        color: black; /* Change text color to white for better contrast */
+        border: none; /* Remove border */
+        padding: 10px 20px; /* Add padding for better appearance */
+        font-size: 18px; /* Set font size */
+        /* cursor: pointer; Add cursor pointer */
+      }
+
+      /* Add hover effect for button */
+      #start-button:hover {
+        background-color: lightgray; /* Change background color on hover */
+      }
+
+      #reset-button:hover {
+        background-color: lightgray; /* Change background color on hover */
+      }
+
+
+      #results {
+        background-color:lightgray (
+          159,
+          192,
+          203
+        ); /* Change the background color as desired */
+        padding: 10px; /* Add padding for better appearance */
+        margin-top: 20px; /* Add some space between the content and the container */
+        border-radius: 15%;
+        font-size: medium;
+        font-weight: 600;
+      }
+    </style>
+
+  </head>
+  <body>
+    <div class="container-fluid text-center">
+      <!-- Header -->
+      <header class="row text-white p-3">
+        <div class="col">
+          <h1 font-weight="bold">Gravitic Gravity</h1>
+        </div>
+      </header>
+
+      <!-- Main Content Area -->
+      <div class="row mt-3">
+        <!-- Left Side -->
+        <aside class="col-md-6">
+          <div class="mb-3">
+            <!-- Simulation container -->
+            <div id="simulation-container">
+              <!-- Your simulation content goes here -->
+              <div class="container-fluid text-center border border-success p-2 mb-2 border-opacity-25">
+                <div id="canvas-container"></div>
+                <div id="dropdown-container"></div>
+                <!-- Add a text box for displaying the selected planet name -->
+            
+                <!-- <p id="selected-planet-textbox">Selected planet</p> -->
+                
+
+              </div>
+            </div>
+
+            <!-- Result Part -->
+            <div id="results" class="mt-3">
+              <p id="time">Time: 0.00 seconds</p>
+              <p id="velocity">Velocity: 0.00 m/s</p>
+              <p id="gravity">Gravity on Planet: 0.00 m/s^2</p>
+              <p id="landing">Status: Not Falling</p>
+              <p id="selected-planet-textbox">Selected planet:</p>
+            </div>
+          </div>
+        </aside>
+
+        <!-- Right Side -->
+        <div class="col-md-6">
+          <div class="bg-light p-3 border border-success p-2 mb-2 border-opacity-25">
+            <!-- Dropdowns and Start Button -->
+            <div class="mb-3">
+              <!-- Select Planet Dropdown -->
+              <label for="planet-dropdown">Select a celestial body:</label>
+              <select id="planet-dropdown" class="form-select mb-3">
+                <option value="None">None</option>
+                <option value="Earth">Earth</option>
+                <option value="Moon">Moon</option>
+                <option value="Mars">Mars</option>
+                <option value="Jupiter">Jupiter</option>
+              </select>
+
+              <!-- Select Chart Dropdown -->
+              <label for="chart-dropdown">Select a chart:</label>
+              <select id="chart-dropdown" class="form-select mb-3">
+                <option value="none">None</option>
+                <option value="velocity">Velocity</option>
+                <option value="displacement">Distance</option>
+                <option value="acceleration">Acceleration</option>
+              </select>
+
+              <!-- Start Button -->
+              <button id="start-button" class="btn btn-secondary">START</button>
+              <button id="reset-button" class="btn btn-secondary">RESET</button>
+              <a class="btn btn-outline-primary " href="finalmee.html" role="button">Comparision of Gravity</a>
+            </div>
+             
+            </div>
+
+            <!-- Graphs -->
+            <!-- Add an ID to each chart container -->
+            <div class="border border-success p-2 mb-2 border-opacity-25" id="velocityChartContainer">
+              <canvas id="velocityChart" width="400" height="200"></canvas>
+            </div>
+
+            <div  class="border border-success p-2 mb-2 border-opacity-25"id="displacementChartContainer" style="display: none">
+              <canvas id="displacementChart" width="400" height="200"></canvas>
+            </div>
+
+            <div class="border border-success p-2 mb-2 border-opacity-25" id="accelerationChartContainer" style="display: none">
+              <canvas id="accelerationChart" width="400" height="200"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+      // JavaScript code here
+      import * as THREE from "https://threejs.org/build/three.module.js";
+
+      // Constants
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(75, 600 / 300, 0.1, 1000);
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(660, 500);
+      document
+        .getElementById("canvas-container")
+        .appendChild(renderer.domElement);
+// Falling Object
+const geometry = new THREE.BoxGeometry(4, 4, 4);
+const material = new THREE.MeshPhongMaterial({
+  color: 0xfffff00, // Light cyan color
+  specular: 0xffffff, // White specular color for shininess
+  shininess: 900, // Increased shininess for a more reflective surface
+});
+const cube = new THREE.Mesh(geometry, material);
+cube.position.set(0, 10, 0); // Initial position (adjust as needed)
+scene.add(cube);
+
+
+
+      // Ground Plane
+      const planeGeometry = new THREE.PlaneGeometry(100, 100);
+      const planeMaterial = new THREE.MeshBasicMaterial({
+        color: 0x444444,
+        side: THREE.DoubleSide,
+      });
+      const groundPlane = new THREE.Mesh(planeGeometry, planeMaterial);
+      groundPlane.rotation.x = Math.PI / 2; // Make the plane horizontal
+      groundPlane.position.y = -4; // Adjust this value to position the ground plane lower
+      scene.add(groundPlane);
+      
+
+      
+
+      // Starry Background
+      const spaceTexture = new THREE.TextureLoader().load(
+        "https://cdn.pixabay.com/photo/2017/08/15/08/23/stars-2643089_1280.jpg"
+      );
+      scene.background = spaceTexture;
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 5.5); // Adjust intensity as needed
+      scene.add(ambientLight);
+
+      // Gravitational Constants for Different Planets (in m/s^2)
+      const gravityConstants = {
+        Earth: 9.8,
+        Moon: 1.625,
+        Mars: 3.72076,
+        Jupiter: 24.79,
+      };
+
+      // Time and Velocity Calculation
+      const initialHeight = cube.position.y;
+      let startTime;
+      let selectedPlanet = "earth";
+      let isFalling = false; // Flag to track if the object is falling
+      const bounceFactor = 0.6;
+      let isBouncing = false;
+
+      // Results part
+      const resultsDiv = document.getElementById("results");
+
+      let isPlanetSelected = false;
+      let isChartSelected = false;
+
+      function animate() {
+        requestAnimationFrame(animate);
+
+        if (isFalling) {
+          const currentTime = Date.now();
+          const elapsedTime = (currentTime - startTime) / 1000;
+          const gravity = gravityConstants[selectedPlanet];
+          let velocity = gravity * elapsedTime;
+          let displacement =
+            initialHeight - 0.5 * gravity * elapsedTime * elapsedTime;
+          let acceleration = gravity;
+
+          // Check for collisions with the ground plane
+          if (displacement <= 1 && !isBouncing) {
+            displacement = 1; // Set displacement to the height of the ground plane
+            velocity = -velocity * bounceFactor; // Reverse velocity with bounce factor
+            startTime = currentTime; // Reset the start time for the bounce
+            isBouncing = true; // Set the flag to indicate bouncing
+          }
+
+          cube.position.setY(displacement);
+
+          // Update the content of the results div
+          resultsDiv.innerHTML = `
+                    <p id="time">Time : ${elapsedTime.toFixed(2)} seconds</p>
+                    <p id="velocity">Velocity : ${velocity.toFixed(2)} m/s</p>
+                    <p id="gravity">Gravity on ${selectedPlanet}: ${gravity.toFixed(
+            2
+          )} m/s^2</p>
+          <p id="selected-planet-textbox">Selected planet:${selectedPlanet}</p>`;
+
+          // Update the charts
+          updateCharts(elapsedTime, velocity, displacement, acceleration);
+
+          // Check if the cube has landed
+          if (displacement <= 1 && isBouncing && velocity < 0) {
+            isBouncing = false; // Reset the bouncing flag
+            isFalling = false; // Stop falling after bouncing
+            document.getElementById("landing").innerText = "Status: Landed";
+            console.log("Object has landed.");
+          }
+
+          renderer.render(scene, camera);
+        }
+      }
+
+      function startAnimation() {
+        if (!isPlanetSelected || !isChartSelected) {
+          // If either planet or chart is not selected, do not start the animation
+          alert(
+            "Please select both a planet and a chart before starting the simulation."
+          );
+          return;
+        }
+
+        startTime = Date.now();
+        isFalling = true;
+        animate();
+
+        console.log("Animation started");
+      }
+
+      camera.position.z = 20;
+
+      window.addEventListener("resize", () => {
+        const newWidth = window.innerWidth;
+        const newHeight = window.innerHeight;
+
+        camera.aspect = newWidth / newHeight;
+        camera.updateProjectionMatrix();
+
+        renderer.setSize(newWidth, newHeight);
+      });
+
+      function changePlanet(planet) {
+        selectedPlanet = planet;
+        cube.position.set(0, 10, 0); // Reset the cube's position when changing the planet
+
+        // Update the content of the selected planet name textbox
+        document.getElementById("selected-planet-textbox").value = `               ${planet.charAt(0).toUpperCase() + planet.slice(1)}`;
+
+        // Reset the charts when the planet is changed
+        velocityChart.data.labels = [];
+        velocityChart.data.datasets[0].data = [];
+        velocityChart.update();
+
+        displacementChart.data.labels = [];
+        displacementChart.data.datasets[0].data = [];
+        displacementChart.update();
+
+        accelerationChart.data.labels = [];
+        accelerationChart.data.datasets[0].data = [];
+        accelerationChart.update();
+      }
+
+      window.addEventListener("load", function () {
+        document
+          .getElementById("planet-dropdown")
+          .addEventListener("change", function () {
+            changePlanet(this.value);
+            // Set the flag indicating the planet is selected
+            isPlanetSelected = true;
+          });
+
+        // Add event listener for the start button
+        document
+          .getElementById("start-button")
+          .addEventListener("click", function () {
+            startAnimation();
+          });
+
+          document.getElementById("reset-button").addEventListener("click", function() {
+        // Reload the page to reset everything
+        location.reload();
+      });
+        // Add event listener for the chart dropdown
+        document
+          .getElementById("chart-dropdown")
+          .addEventListener("change", function () {
+            const selectedChart = this.value;
+
+            for (const container of Object.values(chartContainers)) {
+              container.style.display = "none";
+            }
+
+            chartContainers[selectedChart].style.display = "block";
+
+            // Update the charts immediately
+            updateCharts(0, 0, 0, 0); // Pass dummy values to trigger chart update
+
+            // Set the flag indicating the chart is selected
+            isChartSelected = true;
+          });
+      });
+
+      const velocityCtx = document
+        .getElementById("velocityChart")
+        .getContext("2d");
+      const displacementCtx = document
+        .getElementById("displacementChart")
+        .getContext("2d");
+      const accelerationCtx = document
+        .getElementById("accelerationChart")
+        .getContext("2d");
+
+      const velocityChart = new Chart(velocityCtx, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Velocity vs Time",
+              borderColor: "blue",
+              data: [],
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              min: 0, // Ensure the minimum y-axis value is 0
+            },
+          },
+        },
+      });
+
+      const displacementChart = new Chart(displacementCtx, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Displacement vs Time",
+              borderColor: "green",
+              data: [],
+            },
+          ],
+        },
+      });
+
+      const accelerationChart = new Chart(accelerationCtx, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "Acceleration vs Time",
+              borderColor: "red",
+              data: [],
+            },
+          ],
+        },
+      });
+
+      const chartContainers = {
+        velocity: document.getElementById("velocityChartContainer"),
+        displacement: document.getElementById("displacementChartContainer"),
+        acceleration: document.getElementById("accelerationChartContainer"),
+      };
+
+      for (const container of Object.values(chartContainers)) {
+        container.style.display = "none";
+      }
+
+      chartContainers.velocity.style.display = "block";
+
+      if (resultsDiv) {
+        resultsDiv.style.display = "block";
+      }
+
+      document
+        .getElementById("chart-dropdown")
+        .addEventListener("change", function () {
+          const selectedChart = this.value;
+
+          for (const container of Object.values(chartContainers)) {
+            container.style.display = "none";
+          }
+
+          chartContainers[selectedChart].style.display = "block";
+
+          // Set the flag indicating the chart is selected
+          isChartSelected = true;
+        });
+
+      function updateCharts(time, velocity, displacement, acceleration) {
+        velocityChart.data.labels.push(time.toFixed(2));
+        velocityChart.data.datasets[0].data.push(velocity.toFixed(2));
+        velocityChart.update();
+
+        displacementChart.data.labels.push(time.toFixed(2));
+        displacementChart.data.datasets[0].data.push(displacement.toFixed(2));
+        displacementChart.update();
+
+        accelerationChart.data.labels.push(time.toFixed(2));
+        accelerationChart.data.datasets[0].data.push(acceleration.toFixed(2));
+        accelerationChart.update();
+      }
+    </script>
+  </body>
+</html>

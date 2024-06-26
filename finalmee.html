@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gravity Comparison</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+    <style>
+        #container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            height: 80vh; /* Decreased height */
+        }
+
+        .simulation {
+            width: 45%;
+            height: 100%;
+            overflow: hidden; /* Hide overflow if the simulation is larger */
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        body{
+            background-image: url(https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?q=80&w=1771&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div class="simulation" id="simulation1"></div>
+        <div class="simulation" id="simulation2"></div>
+    </div>
+
+    <div style="color: white; font-size: 20px ; margin: 10px;">
+        <label for="planet-dropdown1">Select planet for Simulation 1:</label>
+        <select id="planet-dropdown1" style="font-size: 20px">
+            <option value="none">Select planet</option>
+            <option value="earth">Earth</option>
+            <option value="moon">Moon</option>
+            <option value="mars">Mars</option>
+            <option value="jupiter">Jupiter</option>
+        </select>
+    </div>
+    <div style="color: white; font-size: 20px; margin: 10px">
+        <label for="planet-dropdown2">Select planet for Simulation 2:</label>
+        <select id="planet-dropdown2" style="font-size: 20px">
+            <option value="none">Select planet</option>
+            <option value="earth">Earth</option>
+            <option value="moon">Moon</option>
+            <option value="mars">Mars</option>
+            <option value="jupiter">Jupiter</option>
+        </select>
+    </div>
+    <button id="start-button" style="font-size: 20px; margin: 10px">Start Simulations</button>
+
+    <script>
+        const gravityConstants = {
+            earth: 9.8,
+            moon: 1.625,
+            mars: 3.72076,
+            jupiter: 24.79,
+        };
+
+        function createSimulation(containerId) {
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth * 0.45, window.innerHeight);
+            document.getElementById(containerId).appendChild(renderer.domElement);
+
+            const geometry = new THREE.BoxGeometry(4, 4, 4);
+            const material = new THREE.MeshPhongMaterial({
+                color: 0x800080,
+                specular: 0x888888,
+                shininess: 10,
+            });
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.set(0, 10, 0);
+            scene.add(cube);
+
+            const groundPlane = new THREE.Mesh(
+                new THREE.PlaneGeometry(100, 100),
+                new THREE.MeshBasicMaterial({ color: 0x444444, side: THREE.DoubleSide })
+            );
+            groundPlane.rotation.x = Math.PI / 2;
+            groundPlane.position.y = -4;
+            scene.add(groundPlane);
+
+            const spaceTexture = new THREE.TextureLoader().load(
+                "https://t3.gstatic.com/licensed-image?q=tbn:ANd9GcSBqxJv1osog1W7-FqQNypdy3dN3Rs10MU-gVmNnL6veDUh7GW4-a-NKjQhbrR9uGij"
+            );
+            scene.background = spaceTexture;
+
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            scene.add(ambientLight);
+
+            camera.position.z = 20;
+
+            function animate(gravity) {
+                requestAnimationFrame(() => animate(gravity));
+                const currentTime = Date.now();
+                const elapsedTime = (currentTime - startTime) / 1000;
+                const displacement = 10 - 0.5 * gravity * elapsedTime * elapsedTime;
+                cube.position.y = Math.max(displacement, 1);
+                renderer.render(scene, camera);
+            }
+
+            let startTime;
+
+            return {
+                startSimulation(planet) {
+                    startTime = Date.now();
+                    animate(gravityConstants[planet]);
+                }
+            };
+        }
+
+        const sim1 = createSimulation("simulation1");
+        const sim2 = createSimulation("simulation2");
+
+        document.getElementById("start-button").addEventListener("click", function () {
+            const planet1 = document.getElementById("planet-dropdown1").value;
+            const planet2 = document.getElementById("planet-dropdown2").value;
+            sim1.startSimulation(planet1);
+            sim2.startSimulation(planet2);
+        });
+    </script>
+</body>
+</html>
